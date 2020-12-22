@@ -1,0 +1,42 @@
+<!--base template with navigation bar-->
+<html>
+    <head>
+        {% if title %}
+        <title>{{ titile }} - Microblog</title>
+        {% else %}
+        <title>No titile</title>
+        {% endif %}
+    </head>
+    <body>
+        <div>Microblog: 
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('login') }}">Login</a>
+        </div>
+        <hr>
+        <!--
+            get_flashed_messages() gets all the messages that have 
+            been registered woth flash() previously
+            once the messages are requested through the 
+            get_flashed_messages() function, they are removed from 
+            the message list, so they appear only once after the 
+            flash() function is called.
+        -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+        <!--each block is given its own name-->
+        <!--
+        <div>Dic: <a href="/dic">Dick!!</a></div>
+        {% block saydic %}{% endblock %}
+        -->
+    </body>
+</html>
+
+

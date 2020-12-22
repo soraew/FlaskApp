@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+<!--
+    adding the forms in forms.py to HTML template
+    so it can be randered om a web page.
+-->
+{% block content %}
+    <h1>Sign In</h1>
+    <!-- 
+        form statement used as a container 
+        action is used to tell the browser the url that should be 
+        used when submitting the information the user entered 
+        in the form.
+
+        method specifies the http request method that should be used
+        when submitting from the server
+    -->
+    <form action="" method="post" novalidate>
+        <!--
+            hidden_tag template generates a hidden field that includes
+            a token that is used to protect the form against CSRF attacks
+            
+            also have SECRET_KEY defined in the Flask config for security
+        -->
+        {{ form.hidden_tag() }}
+        <p>
+            <!--
+                form.<field name>.label for the field label
+                form.<field_name>() for the field
+
+                For fields that require additional HTML attributes, 
+                those can be passed as arguments.
+                like size=32 below, you can attach css classes or ids
+                to form fields
+            -->
+            {{ form.username.label }}<br>
+            {{ form.username(size=32) }}<br>
+            {% for error in form.username.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(size=32) }}<br>
+            {% for error in form.password.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p>{{ form.submit() }}</p>
+    </form>
+
+{% endblock %}
