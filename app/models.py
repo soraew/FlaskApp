@@ -11,6 +11,7 @@ from flask_login import UserMixin
 # UserMixin creates these generic implementations
 
 
+
 # changes to a database are done in the ocntext of a session
 
 # The flask db migrate command does not make any changes to the database, 
@@ -20,6 +21,7 @@ from flask_login import UserMixin
 
 # String type is called varchar in SQL jargon
 class User(UserMixin, db.Model):# Flask-SQLAlchemy uses snake case so this will be user
+                                # extension of db.Model for querying 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)

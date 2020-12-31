@@ -4,16 +4,16 @@ from app import app
 from app.forms import LoginForm
 from app.models import User
 from flask_login import current_user, login_user
+from flask_login import logout_user
+from flask_login import login_required
 
 
 @app.route('/')
 @app.route('/index')
-# @app.route('/dic')
-
-# This means that when a web browser requests either of these two URLs, \
+# This means that when a web browser requests either of these two URLs('/'or'/index'), \
 # Flask is going to invoke this function \
 # and pass the return value of it back to the browser as a response. 
-
+@login_required
 def index():
     user = {'username': 'Alyosha'}
     posts = [
@@ -36,10 +36,12 @@ def index():
 #   to the server
 # -by providing the methods argument, 
 #   you are telling Flask which request methods should be accepted.
+
+# Login
 @app.route('/login', methods=["GET", "POST"])
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
+    if current_user.is_authenticated:# current_user is a flask_login variable
+        return redirect(url_for('index'))# so that a unknown user doesn't login
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username = form.username.data).first()
@@ -47,9 +49,21 @@ def login():
             flash('Invalid username or password')
             return redirect(url_for('login'))# generating urls instead of hard coding 
                                              # is better for updating reasons
-        login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('index'))
+        login_user(user, remember=form.remember_me.data)# login_user also comes from flask_login
+        next_page = request.args.get('next')
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('index')
+        return redirect(next_page)
     return render_template("login.html", title="Sign In", form=form)
-        
+
+#Logout       
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+
+
+    
 
     
